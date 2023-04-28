@@ -2,6 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
+const cors = require("cors");
+
+app.use(cors());
 
 const Pool = require("pg").Pool;
 const pool = new Pool({
@@ -18,7 +21,7 @@ app.use(
     extneded: true,
   })
 );
-app.get("/", (request, response) => {
+app.get("/api/journeys", (request, response) => {
   // pool.query("SELECT * FROM journeys WHERE id = 6", (error, result) => {
   pool.query(
     "SELECT * FROM journeys FETCH FIRST 100 ROWS ONLY",

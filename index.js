@@ -22,9 +22,20 @@ app.use(
   })
 );
 app.get("/api/journeys", (request, response) => {
-  // pool.query("SELECT * FROM journeys WHERE id = 6", (error, result) => {
   pool.query(
-    "SELECT * FROM journeys FETCH FIRST 100 ROWS ONLY",
+    "SELECT * FROM journeys FETCH FIRST 15 ROWS ONLY",
+    (error, result) => {
+      if (error) {
+        throw error;
+      }
+      response.status(200).json(result.rows);
+    }
+  );
+});
+
+app.get("/api/stations", (request, response) => {
+  pool.query(
+    "SELECT * FROM stations FETCH FIRST 8 ROWS ONLY",
     (error, result) => {
       if (error) {
         throw error;

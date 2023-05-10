@@ -21,9 +21,15 @@ app.use(
     extneded: true,
   })
 );
+
+const PAGINATION_PAGELIMIT = 10;
+
 app.get("/api/journeys", (request, response) => {
+  const page = parseInt(request.query.page) || 1;
+  const offset = (page - 1) * PAGINATION_PAGELIMIT;
   pool.query(
-    "SELECT * FROM journeys FETCH FIRST 15 ROWS ONLY",
+    "SELECT * FROM journeys ORDER BY id ASC OFFSET $1 LIMIT $2",
+    [offset, PAGINATION_PAGELIMIT],
     (error, result) => {
       if (error) {
         throw error;
@@ -33,14 +39,47 @@ app.get("/api/journeys", (request, response) => {
   );
 });
 
-app.get("/api/stations", (request, response) => {
+app.get("/api/journeycount", (request, response) => {
   pool.query(
-    "SELECT * FROM stations FETCH FIRST 8 ROWS ONLY",
+    "SELECT count(*) AS exact_count FROM journeys",
+    (error, result) => {
+      if (error) {
+        throw error;
+      }
+      let pageCount = Math.trunc(
+        result.rows[0].exact_count / PAGINATION_PAGELIMIT
+      );
+      response.status(200).json(pageCount);
+    }
+  );
+});
+
+app.get("/api/stations", (request, response) => {
+  const page = parseInt(request.query.page) || 1;
+  const offset = (page - 1) * PAGINATION_PAGELIMIT;
+  pool.query(
+    "SELECT * FROM stations ORDER BY fid ASC OFFSET $1 LIMIT $2",
+    [offset, PAGINATION_PAGELIMIT],
     (error, result) => {
       if (error) {
         throw error;
       }
       response.status(200).json(result.rows);
+    }
+  );
+});
+
+app.get("/api/stationcount", (request, response) => {
+  pool.query(
+    "SELECT count(*) AS exact_count FROM stations",
+    (error, result) => {
+      if (error) {
+        throw error;
+      }
+      let pageCount = Math.trunc(
+        result.rows[0].exact_count / PAGINATION_PAGELIMIT
+      );
+      response.status(200).json(pageCount);
     }
   );
 });

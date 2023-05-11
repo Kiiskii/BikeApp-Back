@@ -84,6 +84,20 @@ app.get("/api/stationcount", (request, response) => {
   );
 });
 
+app.get("/api/search/:searchquery", (request, response) => {
+  let searchquery = request.params.searchquery;
+  console.log(searchquery);
+  pool.query(
+    `SELECT * FROM stations WHERE (nimi LIKE '${searchquery}' OR namn LIKE '${searchquery}' OR name LIKE '${searchquery}')`,
+    (error, result) => {
+      if (error) {
+        throw error;
+      }
+      response.status(200).json(result.rows);
+    }
+  );
+});
+
 app.listen(port, () => {
   console.log(`App running on port ${port}.`);
 });

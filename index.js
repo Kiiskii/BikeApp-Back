@@ -85,10 +85,12 @@ app.get("/api/stationcount", (request, response) => {
 });
 
 app.get("/api/search/:searchquery", (request, response) => {
-  let searchquery = request.params.searchquery;
-  console.log(searchquery);
+  const page = parseInt(request.query.page) || 1;
+  const offset = (page - 1) * PAGINATION_PAGELIMIT;
+  const search = request.params.searchquery;
   pool.query(
-    `SELECT * FROM stations WHERE (nimi LIKE '${searchquery}' OR namn LIKE '${searchquery}' OR name LIKE '${searchquery}')`,
+    "SELECT * FROM stations WHERE (nimi LIKE $1 OR namn LIKE $1 OR name LIKE $1) ORDER BY id ASC OFFSET $2 LIMIT $3",
+    [`%${search}%`, offset, PAGINATION_PAGELIMIT],
     (error, result) => {
       if (error) {
         throw error;

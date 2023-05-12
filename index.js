@@ -84,6 +84,22 @@ app.get("/api/stationcount", (request, response) => {
   );
 });
 
+app.get("/api/search/:searchquery", (request, response) => {
+  const page = parseInt(request.query.page) || 1;
+  const offset = (page - 1) * PAGINATION_PAGELIMIT;
+  const search = request.params.searchquery;
+  pool.query(
+    "SELECT * FROM stations WHERE (nimi LIKE $1 OR namn LIKE $1 OR name LIKE $1) ORDER BY id ASC OFFSET $2 LIMIT $3",
+    [`%${search}%`, offset, PAGINATION_PAGELIMIT],
+    (error, result) => {
+      if (error) {
+        throw error;
+      }
+      response.status(200).json(result.rows);
+    }
+  );
+});
+
 app.listen(port, () => {
   console.log(`App running on port ${port}.`);
 });

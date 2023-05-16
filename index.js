@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
 const cors = require("cors");
+const res = require("express/lib/response");
 
 app.use(cors());
 
@@ -99,6 +100,59 @@ app.get("/api/search/:searchquery", (request, response) => {
     }
   );
 });
+
+app.get("/api/details/:detailsid", async (request, response) => {
+  const id = request.params.detailsid;
+  const stationsResult = await pool.query(
+    "SELECT * FROM stations WHERE fid = $1",
+    [id]
+  );
+  const stationname = stationsResult.rows[0].nimi;
+
+  const departureCountResult = await pool.query(
+    "SELECT count(*) FROM journeys WHERE departure_station_name = $1",
+    [stationname]
+  );
+  const returnCountResult = await pool.query(
+    "SELECT count(*) FROM journeys WHERE return_station_name = $1",
+    [stationname]
+  );
+
+  const stations = stationsResult.rows;
+  const departurecount = departureCountResult.rows[0].count;
+  const returncount = returnCountResult.rows[0].count;
+
+  console.log(stations);
+  console.log(departurecount);
+  console.log(returncount);
+
+  response.status(200).json({ stations, departurecount, returncount });
+});
+
+// app.get("/api/details/:detailsid", (request, response) => {
+//   const id = request.params.detailsid;
+//   console.log(id);
+//   pool.query("SELECT * FROM stations WHERE fid = $1", [id], (error, result) => {
+//     if (error) {
+//       throw error;
+//     }
+//     let stationName = result.rows[0].nimi;
+//     console.log(stationName);
+//     response.status(200).json(result.rows);
+//   });
+//   pool.query(
+//     "SELECT count(*) FROM journeys WHERE departure_station_name = $1",
+//     [stationName],
+//     (error, result) => {
+//       if (error) {
+//         throw error;
+//       }
+//       const count = result.rows;
+//       console.log(count);
+//       response.status(200).json(count);
+//     }
+//   );
+// });
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`);

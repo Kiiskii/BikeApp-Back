@@ -88,9 +88,9 @@ app.get("/api/stationcount", (request, response) => {
 app.get("/api/search/:searchquery", (request, response) => {
   const page = parseInt(request.query.page) || 1;
   const offset = (page - 1) * PAGINATION_PAGELIMIT;
-  const search = request.params.searchquery;
+  const search = request.params.searchquery.toLowerCase();
   pool.query(
-    "SELECT * FROM stations WHERE (nimi LIKE $1 OR namn LIKE $1 OR name LIKE $1) ORDER BY id ASC OFFSET $2 LIMIT $3",
+    "SELECT * FROM stations WHERE (LOWER(nimi) LIKE $1 OR LOWER(namn) LIKE $1 OR LOWER(name) LIKE $1) ORDER BY id ASC OFFSET $2 LIMIT $3",
     [`%${search}%`, offset, PAGINATION_PAGELIMIT],
     (error, result) => {
       if (error) {

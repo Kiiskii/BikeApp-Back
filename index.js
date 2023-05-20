@@ -1,9 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const port = 3000;
+const port = process.env.PORT ?? 3000;
 const cors = require("cors");
 const res = require("express/lib/response");
+const dotenv = require("dotenv").config();
+const host = !!process.env.PORT ? "0.0.0.0" : "app";
 
 app.use(cors());
 
@@ -154,6 +156,6 @@ app.get("/api/details/:detailsid", async (request, response) => {
 //   );
 // });
 
-app.listen(port, () => {
-  console.log(`App running on port ${port}.`);
+app.listen(port, host, () => {
+  console.log(`App running on ${host} : ${port}.`);
 });

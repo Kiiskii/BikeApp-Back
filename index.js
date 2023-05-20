@@ -11,11 +11,11 @@ app.use(cors());
 
 const Pool = require("pg").Pool;
 const pool = new Pool({
-  user: "postgres",
-  host: "db",
-  database: "bikeapp",
-  password: "postgres",
-  port: 5432,
+  user: process.env.PGUSER ?? "postgres",
+  host: process.env.PGHOST ?? "db",
+  database: process.env.PGDATABASE ?? "bikeapp",
+  password: process.env.PASSOWRD ?? "postgres",
+  port: process.env.PGPORT ?? 5432,
 });
 
 app.use(bodyParser.json());

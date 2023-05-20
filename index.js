@@ -14,7 +14,7 @@ const pool = new Pool({
   user: process.env.PGUSER ?? "postgres",
   host: process.env.PGHOST ?? "db",
   database: process.env.PGDATABASE ?? "bikeapp",
-  password: process.env.PASSOWRD ?? "postgres",
+  password: process.env.PGPASSWORD ?? "postgres",
   port: process.env.PGPORT ?? 5432,
 });
 

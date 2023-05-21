@@ -1,14 +1,14 @@
 const request = require("supertest");
 const app = require("./index.js");
 
-describe("test for journeys api request", () => {
-  test("returns response status 200", async () => {
-    console.log("got here");
-    const response = await request(app).get("/api/journeys");
-    console.log("got here too");
-    expect(response.status).toBe(200);
-  });
-});
+// describe("test for journeys api request", () => {
+//   test("returns response status 200", async () => {
+//     console.log("got here");
+//     const response = await request(app).get("/api/journeys");
+//     console.log("got here too");
+//     expect(response.status).toBe(200);
+//   });
+// });
 
 test("adds 1 + 2 to equal 3", () => {
   expect(1 + 2).toBe(3);
@@ -45,12 +45,12 @@ test("adds 1 + 2 to equal 3", () => {
 //   });
 // });
 
-// // describe("GET /api/users", () => {
-// //   test("should return an array of users", async () => {
-// //     const response = await request(app).get("/api/users");
-// //     expect(response.status).toBe(200);
-// //   });
-// // });
+describe("GET /api/users", () => {
+  test("should return an array of users", async () => {
+    const response = await request(app).get("/api/users");
+    expect(response.status).toBe(200);
+  });
+});
 
 // test("adds 1 + 2 to equal 3", () => {
 //   expect(1 + 2).toBe(3);

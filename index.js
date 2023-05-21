@@ -1,18 +1,21 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+const port = process.env.PORT ?? 3000;
 const cors = require("cors");
 const res = require("express/lib/response");
+const dotenv = require("dotenv").config();
+const host = !!process.env.PORT ? "0.0.0.0" : "app";
 
 app.use(cors());
 
 const Pool = require("pg").Pool;
 const pool = new Pool({
-  user: "postgres",
-  host: "db",
-  database: "bikeapp",
-  password: "postgres",
-  port: 5432,
+  user: process.env.PGUSER ?? "postgres",
+  host: process.env.PGHOST ?? "db",
+  database: process.env.PGDATABASE ?? "bikeapp",
+  password: process.env.PGPASSWORD ?? "postgres",
+  port: process.env.PGPORT ?? 5432,
 });
 
 app.use(bodyParser.json());
@@ -91,9 +94,9 @@ app.get("/api/stationcount", (request, response) => {
 app.get("/api/search/:searchquery", (request, response) => {
   const page = parseInt(request.query.page) || 1;
   const offset = (page - 1) * PAGINATION_PAGELIMIT;
-  const search = request.params.searchquery;
+  const search = request.params.searchquery.toLowerCase();
   pool.query(
-    "SELECT * FROM stations WHERE (nimi LIKE $1 OR namn LIKE $1 OR name LIKE $1) ORDER BY id ASC OFFSET $2 LIMIT $3",
+    "SELECT * FROM stations WHERE (LOWER(nimi) LIKE $1 OR LOWER(namn) LIKE $1 OR LOWER(name) LIKE $1) ORDER BY id ASC OFFSET $2 LIMIT $3",
     [`%${search}%`, offset, PAGINATION_PAGELIMIT],
     (error, result) => {
       if (error) {

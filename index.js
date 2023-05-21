@@ -1,11 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const port = process.env.PORT ?? 3000;
 const cors = require("cors");
 const res = require("express/lib/response");
 const dotenv = require("dotenv").config();
-const host = !!process.env.PORT ? "0.0.0.0" : "app";
 
 app.use(cors());
 
@@ -30,13 +28,17 @@ const PAGINATION_PAGELIMIT = 10;
 app.get("/api/journeys", (request, response) => {
   const page = parseInt(request.query.page) || 1;
   const offset = (page - 1) * PAGINATION_PAGELIMIT;
+  console.log("hello");
   pool.query(
     "SELECT * FROM journeys ORDER BY id ASC OFFSET $1 LIMIT $2",
     [offset, PAGINATION_PAGELIMIT],
     (error, result) => {
+      console.log("hello2");
       if (error) {
+        console.log(error);
         throw error;
       }
+      console.log("hello3");
       response.status(200).json(result.rows);
     }
   );
@@ -131,6 +133,11 @@ app.get("/api/details/:detailsid", async (request, response) => {
   response.status(200).json({ stations, departurecount, returncount });
 });
 
+app.get("/api/users", (req, res) => {
+  const users = ["John", "Jane", "Alice"];
+  res.json(users);
+});
+
 // app.get("/api/details/:detailsid", (request, response) => {
 //   const id = request.params.detailsid;
 //   console.log(id);
@@ -156,6 +163,4 @@ app.get("/api/details/:detailsid", async (request, response) => {
 //   );
 // });
 
-app.listen(port, host, () => {
-  console.log(`App running on ${host} : ${port}.`);
-});
+module.exports = app;

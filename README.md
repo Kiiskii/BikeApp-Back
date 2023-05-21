@@ -4,6 +4,8 @@ This is my project for Solita's Dev Academy 2023. You can find the repository fo
 
 With this webapp you can find a list of Helsinki City Bike stations located in Helsinki and Espoo. You can also search for a specific station and check out more details about it including how many journeys where started and ended at said station in the summer of 2021. There is also a list of all the journeys completed during that time. In said list you will find the dates when each journey started and ended, what was the journeys start and end stations, distance covered and time used for the trip.
 
+I used the Git Flows model for version control in this project.
+
 ## Index
 
 - [Tech stack](#tech-stack)

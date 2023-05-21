@@ -1,11 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const port = process.env.PORT ?? 3000;
 const cors = require("cors");
 const res = require("express/lib/response");
 const dotenv = require("dotenv").config();
-const host = !!process.env.PORT ? "0.0.0.0" : "app";
 
 app.use(cors());
 
